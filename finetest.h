@@ -82,12 +82,12 @@ static f_fTest *current_test = NULL;
 #define FINE_DO_NOT_CONTINUE 0
 
 // Function prototype
-int (*fdone)(f_fResult *result) = NULL;  // Function pointer
+void (*f_fdone)(f_fResult *result) = NULL;  // Function pointer
 
 // Clean up and return result is how many tests failed
-static int fine_done() {  // Change macro to function
-    if (fdone) {
-        fdone(result);
+static int f_fine_done() {  // Change macro to function
+    if (f_fdone) {
+        f_fdone(result);
     }
     free(tests);
     int failed = result->failed;
@@ -156,7 +156,9 @@ static int fine_done() {  // Change macro to function
             result->failed++; \
             current_test->passed = false; \
             if(FINE_DO_NOT_CONTINUE) { \
-            exit(fine_done()); \
+            printf("\033[1;31m%s\033[0m\n", current_test->fail); \
+            printf("\033[1;31mStopping tests\033[0m\n"); \
+            exit(f_fine_done()); \
             } \
             return; \
         } else { \
